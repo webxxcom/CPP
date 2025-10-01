@@ -11,10 +11,6 @@ date: 9/30/2025
 Cure::Cure() : AMateria("cure") { }
 Cure::Cure(Cure const &other) : AMateria(other.type) { }
 
-Cure::~Cure() {
-    // Destructor
-}
-
 AMateria *Cure::clone() const
 {
     return new Cure(*this);

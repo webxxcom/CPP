@@ -7,7 +7,7 @@
 #include "IMateriaSource.h"
 #include "MateriaSource.h"
 
-int main()
+void test1(void)
 {
     std::cout << "=== TEST 1: Basic creation & clone ===" << std::endl;
     AMateria *ice = new Ice();
@@ -21,7 +21,10 @@ int main()
     delete iceClone;
     delete ice;
     delete cure;
+}
 
+void test2(void)
+{
     std::cout << "\n=== TEST 2: Basic use ===" << std::endl;
     Character cloud("Cloud");
     Character seph("Sephiroth");
@@ -29,22 +32,43 @@ int main()
     cloud.equip(new Cure());
     cloud.use(0, seph);  // expected: shoots ice bolt at Sephiroth
     cloud.use(1, cloud); // expected: heals Cloud's wounds
+}
 
+void test3(void)
+{
     std::cout << "\n=== TEST 3: Inventory limits ===" << std::endl;
-    cloud.equip(new Ice());
-    cloud.equip(new Cure());
-    cloud.equip(new Ice()); // should be ignored (5th materia)
+    ICharacter *cloud = new Character("Cloud");
+    Character seph("Sephiroth");
+
+    cloud->equip(new Ice());
+    cloud->equip(new Cure());
+    cloud->equip(new Ice());
+    cloud->equip(new Cure());
+    cloud->equip(new Ice()); // should be ignored (5th materia)
     for (int i = 0; i < 5; i++)
-        cloud.use(i, seph);
+        cloud->use(i, seph);
+    delete cloud;
+}
 
+void test4(void)
+{
     std::cout << "\n=== TEST 4: Unequip behavior ===" << std::endl;
-    AMateria *tmp = new Ice();
-    cloud.equip(tmp);
-    cloud.unequip(0);   // should not delete tmp
-    cloud.use(0, seph); // nothing happens
-    delete tmp;         // must delete manually
+    ICharacter *cloud = new Character("Cloud");
+    Character seph("Sephiroth");
 
+    AMateria *tmp = new Ice();
+    cloud->equip(tmp);
+    cloud->unequip(0);   // should not delete tmp
+    cloud->use(0, seph); // nothing happens
+    delete cloud;
+}
+
+void test5(void)
+{
     std::cout << "\n=== TEST 5: Copy semantics (deep copy) ===" << std::endl;
+    Character cloud("Cloud");
+    Character seph("Sephiroth");
+
     cloud.equip(new Ice());
     Character copyCloud(cloud); // copy constructor
     cloud.use(0, seph);
@@ -54,7 +78,10 @@ int main()
     Character assignCloud("Temp");
     assignCloud = cloud;      // operator=
     assignCloud.use(0, seph); // must work or do nothing safely
+}
 
+void test6(void)
+{
     std::cout << "\n=== TEST 6: MateriaSource learning & creating ===" << std::endl;
     MateriaSource src;
     src.learnMateria(new Ice());
@@ -74,8 +101,15 @@ int main()
     delete createdIce;
     delete createdCure;
     // unknown is nullptr, no delete
+}
 
+void test7(void)
+{
     std::cout << "\n=== TEST 7: Integration ===" << std::endl;
+    MateriaSource src;
+    src.learnMateria(new Ice());
+    src.learnMateria(new Cure());
+
     Character hero("Cloud");
     Character villain("Sephiroth");
 
@@ -87,15 +121,33 @@ int main()
 
     hero.use(0, villain);
     hero.use(1, hero);
+}
 
+void test8(void)
+{
     std::cout << "\n=== TEST 8: Destructor / memory leaks ===" << std::endl;
+    MateriaSource src;
+    src.learnMateria(new Ice());
+    src.learnMateria(new Cure());
     {
         Character temp("Temporary");
         temp.equip(src.createMateria("ice"));
         temp.equip(src.createMateria("cure"));
         // automatic cleanup at scope exit
     }
-    std::cout << "If run under valgrind: no leaks should appear!" << std::endl;
+}
 
+int main()
+{
+    test1();
+    test2();
+    test3();
+    test4();
+    test5();
+    test6();
+    test7();
+    test8();
+
+    std::cout << "If run under valgrind: no leaks should appear!" << std::endl;
     return 0;
 }

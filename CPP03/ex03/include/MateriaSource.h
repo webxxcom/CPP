@@ -16,7 +16,8 @@ private:
     static const int MAX_MATERIA = 4;
     AMateria *learntMaterias[MAX_MATERIA];
 public:
-    virtual ~MateriaSource() {}
+    MateriaSource();
+    virtual ~MateriaSource();
     virtual void learnMateria(AMateria *materia);
     virtual AMateria *createMateria(std::string const &type);
 };

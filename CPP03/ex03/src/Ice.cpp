@@ -11,10 +11,6 @@ date: 9/30/2025
 Ice::Ice() : AMateria("ice") { }
 Ice::Ice(Ice const &other) : AMateria(other.type) { }
 
-Ice::~Ice() {
-    // Destructor
-}
-
 AMateria *Ice::clone() const
 {
     return new Ice(*this);

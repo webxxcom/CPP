@@ -17,6 +17,10 @@ private:
     AMateria *inventory[4];
     static const int MAX_INVITEMS = 4;
 
+    AMateria *trash[100];
+    int trashCount;
+
+    void initInventory();
 public:
     Character();
     explicit Character(std::string const& name);
