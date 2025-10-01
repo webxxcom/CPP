@@ -8,14 +8,7 @@ date: 9/24/2025
 #include "HumanA.h"
 
 HumanA::HumanA(std::string name, Weapon &weapon)
-    : weapon(weapon), name(name)
-{
-}
-
-HumanA::~HumanA()
-{
-    // Destructor
-}
+    : weapon(weapon), name(name) { }
 
 void HumanA::attack() const
 {

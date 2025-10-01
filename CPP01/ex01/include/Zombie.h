@@ -5,8 +5,7 @@ Author: Webxxcom
 Date: 9/23/2025
 ------------------------------------------ */
 
-#ifndef ZOMBIE_H
-#define ZOMBIE_H
+#pragma once
 
 #include <string>
 
@@ -24,5 +23,3 @@ public:
 };
 
 Zombie *zombieHorde(int N, std::string name);
-
-#endif // ZOMBIE_H

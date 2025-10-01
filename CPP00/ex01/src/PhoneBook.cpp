@@ -11,16 +11,9 @@ date: 9/21/2025
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <cstring>
 
-PhoneBook::PhoneBook() : size(0)
-{
-    // Constructor
-}
-
-PhoneBook::~PhoneBook()
-{
-    // Destructor
-}
+PhoneBook::PhoneBook() : size(0) { }
 
 void PhoneBook::add()
 {

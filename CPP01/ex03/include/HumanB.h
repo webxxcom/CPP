@@ -5,8 +5,7 @@ Author: Webxxcom
 Date: 9/24/2025
 ------------------------------------------ */
 
-#ifndef HUMANB_H
-#define HUMANB_H
+#pragma once
 
 #include "Weapon.h"
 
@@ -19,11 +18,8 @@ private:
 public:
     HumanB();
     HumanB(std::string name);
-    ~HumanB();
 
     void attack() const;
     const Weapon *getWeapon() const;
     void setWeapon(Weapon &weapon);
 };
-
-#endif // HUMANB_H

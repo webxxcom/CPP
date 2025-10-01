@@ -5,8 +5,7 @@ Author: Webxxcom
 Date: 9/24/2025
 ------------------------------------------ */
 
-#ifndef HUMANA_H
-#define HUMANA_H
+#pragma once
 
 #include "Weapon.h"
 
@@ -17,9 +16,6 @@ private:
 
 public:
     HumanA(std::string name, Weapon &weapon);
-    ~HumanA();
 
     void attack() const;
 };
-
-#endif // HUMANA_H

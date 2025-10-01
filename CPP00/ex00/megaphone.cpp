@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   megaphone.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkravche <rkravche@student.42.fr>          +#+  +:+       +#+        */
+/*   By: webxxcom <webxxcom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 10:36:46 by webxxcom          #+#    #+#             */
-/*   Updated: 2025/09/23 13:44:31 by rkravche         ###   ########.fr       */
+/*   Updated: 2025/10/01 09:45:54 by webxxcom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 #include <iostream>
-#include <cstdlib>
 
 int main(int argc, char **argv)
 {

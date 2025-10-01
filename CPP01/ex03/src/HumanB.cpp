@@ -7,18 +7,8 @@ date: 9/24/2025
 
 #include "HumanB.h"
 
-HumanB::HumanB() : name(), weapon()
-{
-}
-
-HumanB::HumanB(std::string name) : name(name), weapon()
-{
-}
-
-HumanB::~HumanB()
-{
-    // Destructor
-}
+HumanB::HumanB() : name(), weapon() { }
+HumanB::HumanB(std::string name) : name(name), weapon() { }
 
 const Weapon *HumanB::getWeapon() const { return weapon; }
 
