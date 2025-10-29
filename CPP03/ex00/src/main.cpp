@@ -1,47 +1,32 @@
+#include "ClapTrap.h"
 #include <iostream>
-#include "Cat.h"
-#include "Dog.h"
-#include "WrongAnimal.h"
-#include "WrongCat.h"
 
-void testCat(void)
+int main(void)
 {
-    Animal *cat = new Cat();
-    std::cout << "The animal has type of " << cat->getType() << " and has sound ";
-    cat->makeSound();
-    delete cat;
-}
+    ClapTrap a("Jack");
+    ClapTrap b("Bob");
 
-void testDog(void)
-{
-    Animal const *dog = new Dog();
-    std::cout << "The animal has type " << dog->getType() << " and has sound ";
-    dog->makeSound();
-    delete dog;
-}
+    std::cout << "\n=== BASIC ACTIONS ===\n";
+    a.attack("Bob");
+    b.takeDamage(3);
+    b.beRepaired(2);
 
-void testAnimal(void)
-{
-    Animal *an = new Animal();
-    an->makeSound();
-    delete an;
-}
+    std::cout << "\n=== ENERGY DRAIN TEST ===\n";
+    for (int i = 0; i < 10; ++i)
+        a.attack("training dummy");
+    // This one should fail — no energy left
+    a.attack("training dummy");
 
-void testWrongCat(void)
-{
-    WrongAnimal *cat = new WrongCat();
-    cat->makeSound();
-    delete cat;
-}
+    std::cout << "\n=== DAMAGE AND DEATH TEST ===\n";
+    b.takeDamage(20); // Should drop below zero HP
+    b.attack("Jack"); // Should fail (no HP)
+    b.beRepaired(5);  // Should fail (no HP)
 
-int main()
-{
-    std::cout << "Testing cat.." << std::endl;
-    testCat();
-    std::cout << "\nTesting dog.." << std::endl;
-    testDog();
-    std::cout << "\nTesting just an animal.." << std::endl;
-    testAnimal();
-    std::cout << "\nTesting wrong animal.." << std::endl;
-    testWrongCat();
+    std::cout << "\n=== MULTIPLE REPAIRS ===\n";
+    ClapTrap c("Healer");
+    for (int i = 0; i < 3; ++i)
+        c.beRepaired(4);
+
+    std::cout << "\n=== END OF TESTS ===\n";
+    return 0;
 }

@@ -1,7 +1,7 @@
 #include "ex01/include/InputValidator.h"
 # Compiler and flags
 CXX      := c++
-CXXFLAGS := -Wall -Wextra -Werror -Iinclude
+CXXFLAGS := -Wall -Wextra -Werror -Iinclude -g
 CXXFLAGS += -std=c++98
 
 # Directories
@@ -9,10 +9,11 @@ SRC_DIR  := src
 OBJ_DIR  := obj
 INC_DIR  := include
 
-# Files
-SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/ClapTrap.cpp $(SRC_DIR)/ScavTrap.cpp $(SRC_DIR)/FragTrap.cpp
+# Files 
+SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/Cat.cpp $(SRC_DIR)/Animal.cpp $(SRC_DIR)/Dog.cpp \
+			$(SRC_DIR)/Brain.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
-NAME     := fragTrap
+NAME     := prog
 
 all: $(NAME)
 

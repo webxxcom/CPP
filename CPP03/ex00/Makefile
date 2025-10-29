@@ -9,11 +9,10 @@ SRC_DIR  := src
 OBJ_DIR  := obj
 INC_DIR  := include
 
-# Files 
-SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/Cat.cpp $(SRC_DIR)/Animal.cpp $(SRC_DIR)/Dog.cpp \
-			 $(SRC_DIR)/WrongCat.cpp $(SRC_DIR)/WrongAnimal.cpp
+# Files
+SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/ClapTrap.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
-NAME     := prog
+NAME     := clapTrap
 
 all: $(NAME)
 
