@@ -121,6 +121,9 @@ void test7(void)
 
     hero.use(0, villain);
     hero.use(1, hero);
+
+    hero.unequip(0);
+    villain.equip(m1);
 }
 
 void test8(void)
@@ -147,7 +150,4 @@ int main()
     test6();
     test7();
     test8();
-
-    std::cout << "If run under valgrind: no leaks should appear!" << std::endl;
-    return 0;
 }

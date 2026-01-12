@@ -1,4 +1,3 @@
-#include "ex01/include/InputValidator.h"
 # Compiler and flags
 CXX      := c++
 CXXFLAGS := -Wall -Wextra -Werror -Iinclude -g
@@ -11,7 +10,7 @@ INC_DIR  := include
 
 # Files 
 SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/AMateria.cpp $(SRC_DIR)/Character.cpp $(SRC_DIR)/Cure.cpp \
-			$(SRC_DIR)/Ice.cpp $(SRC_DIR)/MateriaSource.cpp
+			$(SRC_DIR)/Ice.cpp $(SRC_DIR)/MateriaSource.cpp $(SRC_DIR)/Trash.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 NAME     := prog
 

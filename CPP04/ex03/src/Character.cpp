@@ -6,6 +6,9 @@ date: 9/30/2025
 ------------------------------------------ */
 
 #include "Character.h"
+#include <iostream>
+
+Trash Character::trash;
 
 void Character::initInventory()
 {
@@ -13,21 +16,20 @@ void Character::initInventory()
 		this->inventory[i] = NULL;
 }
 
-
 Character::Character()
-    : name(), trashCount(0)
+    : name()
 {
 	initInventory();
 }
 
 Character::Character(std::string const &name)
-	: name(name), trashCount(0)
+	: name(name)
 {
 	initInventory();
 }
 
 Character::Character(Character const &other)
-	: name(), trashCount(0)
+	: name()
 {
 	initInventory();
 	*this = other;
@@ -35,10 +37,10 @@ Character::Character(Character const &other)
 
 Character::~Character()
 {
+	std::cout << "Called destructor for " << this->name << '\n';
 	for(size_t i = 0; i < MAX_INVITEMS; ++i)
-		delete this->inventory[i];
-	for(int i = 0; i < trashCount; ++i)
-		delete trash[i];
+		trash.add(this->inventory[i]);
+	trash.clean();
 }
 
 Character &Character::operator=(Character const &other)
@@ -64,18 +66,20 @@ void Character::equip(AMateria *m)
 	{
 		if (!inventory[i])
 		{
+			std::cout << "Equppied " << m << '\n';
 			inventory[i] = m;
 			return ;
 		}
 	}
-	delete m;
+	trash.add(m);
 }
 
 void Character::unequip(int idx)
 {
 	if (idx < 0 ||idx >= MAX_INVITEMS || !inventory[idx])
 		return ;
-	trash[trashCount++] = inventory[idx];
+	std::cout << "Unequiped " << inventory[idx] << '\n';
+	trash.add(inventory[idx]);
 	inventory[idx] = NULL;
 }
 

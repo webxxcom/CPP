@@ -8,19 +8,18 @@ Date: 9/30/2025
 #pragma once
 
 #include "ICharacter.h"
-#include "AMateria.h"
+#include "Trash.h"
 
 class Character : public ICharacter
 {
 private:
+    void initInventory();
+    
+    static const int MAX_INVITEMS = 4;
+    static Trash trash;
+    
     std::string name;
     AMateria *inventory[4];
-    static const int MAX_INVITEMS = 4;
-
-    AMateria *trash[100];
-    int trashCount;
-
-    void initInventory();
 public:
     Character();
     explicit Character(std::string const& name);
