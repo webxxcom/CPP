@@ -68,16 +68,16 @@ bool Fixed::operator<=(Fixed const &other) { return this->raw <= other.raw; }
 bool Fixed::operator==(Fixed const &other) { return (this->raw == other.raw); }
 bool Fixed::operator!=(Fixed const &other) { return this->raw != other.raw; }
 
-Fixed Fixed::operator+(Fixed const &other) { return Fixed(this->raw + other.raw, 1); }
-Fixed Fixed::operator-(Fixed const &other) {return Fixed(this->raw - other.raw, 1); }
+Fixed Fixed::operator+(Fixed const &other) const { return Fixed(this->raw + other.raw, 1); }
+Fixed Fixed::operator-(Fixed const &other) const { return Fixed(this->raw - other.raw, 1); }
 
-Fixed Fixed::operator*(Fixed const &other)
+Fixed Fixed::operator*(Fixed const &other) const
 {
 	int64_t raw_scaled_res = (int64_t)this->raw * (int64_t)other.raw;
 	return Fixed(raw_scaled_res >> bits, 1);
 }
 
-Fixed Fixed::operator/(Fixed const &other)
+Fixed Fixed::operator/(Fixed const &other) const
 {
 	int raw_res = ((int64_t)this->raw << bits) / other.raw;
 	return Fixed(raw_res, 1);

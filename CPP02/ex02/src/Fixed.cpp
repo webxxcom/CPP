@@ -69,7 +69,7 @@ bool Fixed::operator==(Fixed const &other) { return (this->raw == other.raw); }
 bool Fixed::operator!=(Fixed const &other) { return this->raw != other.raw; }
 
 Fixed Fixed::operator+(Fixed const &other) { return Fixed(this->raw + other.raw, 1); }
-Fixed Fixed::operator-(Fixed const &other) {return Fixed(this->raw - other.raw, 1); }
+Fixed Fixed::operator-(Fixed const &other) { return Fixed(this->raw - other.raw, 1); }
 
 Fixed Fixed::operator*(Fixed const &other)
 {

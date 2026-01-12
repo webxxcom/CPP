@@ -1,7 +1,7 @@
 #include "ex01/include/InputValidator.h"
 # Compiler and flags
 CXX      := c++
-CXXFLAGS := -Wall -Wextra -Werror -Iinclude -g
+CXXFLAGS := -Iinclude #-Wall -Wextra -Werror  -g
 CXXFLAGS += -std=c++98
 
 # Directories

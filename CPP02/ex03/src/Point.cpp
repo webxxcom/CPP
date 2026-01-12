@@ -27,5 +27,6 @@ Fixed const &Point::getX() const { return x; }
 
 Point &Point::operator=(Point const &other)
 {
-    return *this;
+    (void)other;
+    return (*this);
 }

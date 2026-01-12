@@ -1,37 +1,73 @@
 #include <iostream>
+#include "Point.h"
 #include "Fixed.h"
 
-int main(void)
+bool bsp(Point const a, Point const b, Point const c, Point const point);
+
+void test(Point const& a, Point const& b, Point const& c, Point const& p, bool expected)
 {
-    Fixed a;                                    // default = 0
-    Fixed b(Fixed(5.05f) * Fixed(2));           // 5.05 * 2 = 10.1
+    bool result = bsp(a, b, c, p);
 
-    std::cout << "a = " << a << std::endl;      // 0
-    std::cout << "++a = " << ++a << std::endl;  // 0 -> 0.00390625
-    std::cout << "a = " << a << std::endl;      // 0.00390625
-    std::cout << "a++ = " << a++ << std::endl;  // prints 0.00390625, then a=0.0078125
-    std::cout << "a = " << a << std::endl;      // 0.0078125
+    std::cout << "Point (" 
+              << p.getX() << ", " << p.getY() << ") -> "
+              << (result ? "INSIDE" : "OUTSIDE");
 
-    std::cout << "a + a = " << (a + a) << std::endl; // 0.0078125 + 0.0078125 = 0.015625
-    std::cout << "a - b = " << (a - b) << std::endl; // 0.0078125 - 10.1 = -10.0921875
-    std::cout << "b * a = " << (b * a) << std::endl; // 10.1 * 0.0078125 = 0.07890625
-    std::cout << "b / a = " << (b / a) << std::endl; // 10.1 / 0.0078125 = 1292.5
+    if (result == expected)
+        std::cout << "  ✅";
+    else
+        std::cout << "  ❌  (EXPECTED " << (expected ? "INSIDE" : "OUTSIDE") << ")";
 
-    std::cout << "b = " << b << std::endl;                                // 10.1
-    std::cout << "10.2 / 2 = " << (Fixed(10.2f) / Fixed(2)) << std::endl; // 5.1
+    std::cout << std::endl;
+}
 
-    // Comparisons
-    std::cout << std::boolalpha;
-    std::cout << "a < b  = " << (a < b) << std::endl;  // 2 < 10.1 → true
-    std::cout << "a > b  = " << (a > b) << std::endl;  // 2 > 10.1 → false
-    std::cout << "a <= b = " << (a <= b) << std::endl; // true
-    std::cout << "a >= b = " << (a >= b) << std::endl; // false
-    std::cout << "a == b = " << (a == b) << std::endl; // false
-    std::cout << "a != b = " << (a != b) << std::endl; // true
+int main()
+{
+    Point a(Fixed(0), Fixed(0));
+    Point b(Fixed(10), Fixed(0));
+    Point c(Fixed(0), Fixed(10));
 
-    // Static min/max
-    std::cout << "max(a, b) = " << Fixed::max(a, b) << std::endl; // 10.1
-    std::cout << "min(a, b) = " << Fixed::min(a, b) << std::endl; // 0.0078125
+    std::cout << "\n--- BASIC INSIDE ---\n";
+    test(a, b, c, Point(Fixed(1), Fixed(1)), true);
+    test(a, b, c, Point(Fixed(2), Fixed(2)), true);
+    test(a, b, c, Point(Fixed(3), Fixed(1)), true);
 
-    return 0;
+    std::cout << "\n--- OUTSIDE ---\n";
+    test(a, b, c, Point(Fixed(10), Fixed(10)), false);
+    test(a, b, c, Point(Fixed(-1), Fixed(1)), false);
+    test(a, b, c, Point(Fixed(5), Fixed(6)), false);
+
+    std::cout << "\n--- EDGE CASES (MUST BE FALSE) ---\n";
+    test(a, b, c, Point(Fixed(0), Fixed(0)), false);
+    test(a, b, c, Point(Fixed(10), Fixed(0)), false);
+    test(a, b, c, Point(Fixed(0), Fixed(10)), false);
+    test(a, b, c, Point(Fixed(5), Fixed(0)), false);
+    test(a, b, c, Point(Fixed(0), Fixed(5)), false);
+    test(a, b, c, Point(Fixed(5), Fixed(5)), false);
+
+    std::cout << "\n--- CLOSE TO EDGE (PRECISION TEST) ---\n";
+    test(a, b, c, Point(Fixed(5), Fixed(4.9f)), true);
+    test(a, b, c, Point(Fixed(5), Fixed(5.1f)), false);
+
+    std::cout << "\n--- REVERSED TRIANGLE (winding test) ---\n";
+    Point ra(Fixed(0), Fixed(10));
+    Point rb(Fixed(10), Fixed(0));
+    Point rc(Fixed(0), Fixed(0));
+    test(ra, rb, rc, Point(Fixed(1), Fixed(1)), true);
+    test(ra, rb, rc, Point(Fixed(5), Fixed(5)), false);
+
+    std::cout << "\n--- DIFFERENT SHAPE ---\n";
+    Point t1(Fixed(1), Fixed(1));
+    Point t2(Fixed(6), Fixed(2));
+    Point t3(Fixed(3), Fixed(7));
+    test(t1, t2, t3, Point(Fixed(3), Fixed(3)), true);
+    test(t1, t2, t3, Point(Fixed(5), Fixed(5)), false);
+    test(t1, t2, t3, Point(Fixed(3), Fixed(6)), true);
+    test(t1, t2, t3, Point(Fixed(1), Fixed(6)), false);
+    test(t1, t2, t3, Point(Fixed(4), Fixed(6)), false);
+    test(t1, t2, t3, Point(Fixed(2), Fixed(6)), false);
+    test(t1, t2, t3, Point(Fixed(1), Fixed(1)), false);
+    test(t1, t2, t3, Point(Fixed(1.1f), Fixed(1.2f)), true);
+    test(t1, t2, t3, Point(Fixed(1.9f), Fixed(1.2f)), true);
+    test(t1, t2, t3, Point(Fixed(2.f), Fixed(1.2f)), false);
+    test(t1, t2, t3, Point(Fixed(2.1f), Fixed(1.2f)), false);
 }
