@@ -17,7 +17,6 @@ public:
     RobotomyRequestForm(RobotomyRequestForm const &other);
     RobotomyRequestForm &operator=(RobotomyRequestForm const &other);
     virtual ~RobotomyRequestForm();
-
     
     void executeItself() const;
 

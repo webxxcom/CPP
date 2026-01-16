@@ -15,6 +15,7 @@ class Grade {
 private:
     short value;
 public:
+    Grade();
     Grade(short value);
     Grade(Grade const &other);
     Grade &operator=(Grade const &other);

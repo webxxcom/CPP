@@ -9,7 +9,7 @@ Date: 1/15/2026
 #define BUREAUCRAT_H
 
 #include "Grade.h"
-#include "AForm.h"
+#include "Form.h"
 #include <string>
 #include <iostream>
 
@@ -18,6 +18,7 @@ private:
     std::string const name;
     Grade grade;
 public:
+    Bureaucrat();
     Bureaucrat(std::string const name, Grade grade);
     Bureaucrat(Bureaucrat const &other);
     Bureaucrat &operator=(Bureaucrat const &other);

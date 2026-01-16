@@ -16,6 +16,7 @@ class Bureaucrat;
 
 class Form {
 public:
+    Form();
     Form(std::string const name, Grade const sign_grade, Grade const execute_grade);
     Form(std::string const name, Grade const sign_grade, Grade const execute_grade, bool is_signed);
     Form(Form const &other);
@@ -36,7 +37,6 @@ private:
     Grade const sign_grade;
     Grade const execute_grade;
     bool is_signed;
-
 };
 
 #endif // FORM_H
