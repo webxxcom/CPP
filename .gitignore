@@ -1,6 +1,7 @@
 .vscode
 obj
 *.exe
+prog
 
 # Prerequisites
 *.d
