@@ -1,28 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   megaphone.cpp                                      :+:      :+:    :+:   */
+/*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkravche <rkravche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 10:36:46 by webxxcom          #+#    #+#             */
-/*   Updated: 2025/10/18 11:12:25 by rkravche         ###   ########.fr       */
+/*   Created: 2025/10/18 14:37:05 by rkravche          #+#    #+#             */
+/*   Updated: 2025/10/18 14:45:11 by rkravche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
-#include <iostream>
+#include "Harl.h"
 
 int main(int argc, char **argv)
 {
-	if (argc == 1)
-		std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *";
-	else
-	{
-		for (int i = 1; i < argc; ++i)
-			for (size_t j = 0; argv[i][j]; ++j)
-				std::cout << static_cast<char>(std::toupper(argv[i][j]));
-	}
-	std::cout << std::endl;
-	return (EXIT_SUCCESS);
+    if (argc != 2)
+        return 1;
+
+    Harl harl;
+    harl.complain(argv[1]);
 }

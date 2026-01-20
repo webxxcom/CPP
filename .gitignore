@@ -2,6 +2,7 @@
 obj
 *.exe
 prog
+*_intra
 
 # Prerequisites
 *.d

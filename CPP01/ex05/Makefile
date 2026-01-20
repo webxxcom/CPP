@@ -1,12 +1,16 @@
+#include "ex01/include/InputValidator.h"
+# Compiler and flags
 CXX      := c++
 CXXFLAGS := -Wall -Wextra -Werror -Iinclude
 CXXFLAGS += -std=c++98
 
+# Directories
 SRC_DIR  := src
 OBJ_DIR  := obj
 INC_DIR  := include
 
-SRCS     := $(SRC_DIR)/main.cpp 
+# Files
+SRCS     := $(SRC_DIR)/Harl.cpp $(SRC_DIR)/main.cpp 
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 NAME     := prog
 

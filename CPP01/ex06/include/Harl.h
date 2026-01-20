@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   megaphone.cpp                                      :+:      :+:    :+:   */
+/*   Harl.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkravche <rkravche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 10:36:46 by webxxcom          #+#    #+#             */
-/*   Updated: 2025/10/18 11:12:25 by rkravche         ###   ########.fr       */
+/*   Created: 2025/10/18 14:36:27 by rkravche          #+#    #+#             */
+/*   Updated: 2025/10/18 14:36:28 by rkravche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
-#include <iostream>
+#ifndef HARL_HPP
+# define HARL_HPP
 
-int main(int argc, char **argv)
-{
-	if (argc == 1)
-		std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *";
-	else
-	{
-		for (int i = 1; i < argc; ++i)
-			for (size_t j = 0; argv[i][j]; ++j)
-				std::cout << static_cast<char>(std::toupper(argv[i][j]));
-	}
-	std::cout << std::endl;
-	return (EXIT_SUCCESS);
-}
+# include <string>
+
+class Harl {
+private:
+    void debug(void);
+    void info(void);
+    void warning(void);
+    void error(void);
+
+public:
+    void complain(std::string level);
+};
+
+#endif
