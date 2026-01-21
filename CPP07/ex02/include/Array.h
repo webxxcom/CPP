@@ -15,21 +15,20 @@ Date: 1/20/2026
 template<typename T>
 class Array {
 public:
-    Array() { this->init(); }
-    Array(unsigned int n) { this->init(n); }
-    Array(Array const& other) { *this = other; }
+    Array() : _data(NULL) { this->init(); }
+    Array(unsigned int n) : _data(NULL) { this->init(n); }
+    Array(Array const& other) : _data(NULL) { *this = other; }
     ~Array()
     {
-        if (_data)
-            delete _data;
+        if (this->_data)
+            delete[] _data;
     }
 
     Array &operator=(Array const& other)
     {
         if (this->_data)
-            delete _data;
-        this->_capacity = other._capacity;
-        this->_size = other._size;
+            delete[] _data;
+        this->init(other._capacity);
         std::memcpy(this->_data, other._data, other._capacity);
         return (*this);
     }
@@ -60,9 +59,8 @@ private:
     void init(size_t capacity)
     {
         this->_capacity = capacity;
-        this->_size = 0;
-        this->_data = new T[capacity];
-        std::memset(this->_data, 0, this->_capacity);
+        this->_size = capacity;
+        this->_data = new T[capacity]();
     }
 };
 
