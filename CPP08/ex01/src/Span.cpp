@@ -29,6 +29,11 @@ void Span::addNumber(int const num)
 
 static int find_dist(int l, int r) { return (std::abs(r - l)); }
 
+/**
+ * Tranfosrm the array of number so that the resulted array looks like:
+ *  res[i] = abs(nums[i + 1] - nums[i])
+ * , i.e. the resulted array stores the absolute difference(distance) between the current and the next number
+ */
 int Span::shortestSpan() const
 {
     checkForSpan();

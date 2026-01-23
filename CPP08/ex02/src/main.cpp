@@ -6,77 +6,38 @@
 /*   By: webxxcom <webxxcom@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/17 17:33:12 by webxxcom          #+#    #+#             */
-/*   Updated: 2026/01/21 19:31:22 by webxxcom         ###   ########.fr       */
+/*   Updated: 2026/01/23 19:38:51 by webxxcom         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 #include <iostream>
-#include "Array.h"
+#include <vector>
 
-#define SEP std::cout << "-----------------------------\n";
+#define EASY_ITER
+#include "MutantStack.h"
 
 int main()
 {
-    std::cout << "===== TEST 1: Default constructor =====\n";
-    Array<int> empty;
-    std::cout << "Size: " << empty.size() << std::endl;
-    SEP
-
-    std::cout << "===== TEST 2: Sized constructor =====\n";
-    Array<int> a(5);
-    std::cout << "Size: " << a.size() << std::endl;
-    for (unsigned int i = 0; i < a.size(); i++)
-        std::cout << "a[" << i << "] = " << a[i] << std::endl;
-    SEP
-
-    std::cout << "===== TEST 3: Write / read access =====\n";
-    for (unsigned int i = 0; i < a.size(); i++)
-        a[i] = i * 10;
-    for (unsigned int i = 0; i < a.size(); i++)
-        std::cout << "a[" << i << "] = " << a[i] << std::endl;
-    SEP
-
-    std::cout << "===== TEST 4: Copy constructor =====\n";
-    Array<int> b(a);
-    b[0] = 999;
-    std::cout << "Original a[0]: " << a[0] << std::endl;
-    std::cout << "Copy     b[0]: " << b[0] << std::endl;
-    SEP
-
-    std::cout << "===== TEST 5: Assignment operator =====\n";
-    Array<int> c;
-    c = a;
-    c[1] = 888;
-    std::cout << "Original a[1]: " << a[1] << std::endl;
-    std::cout << "Assigned c[1]: " << c[1] << std::endl;
-    SEP
-
-    std::cout << "===== TEST 6: Out-of-bounds access =====\n";
-    try
+    MutantStack<int> mstack;
+    mstack.push(5);
+    mstack.push(17);
+    std::cout << mstack.top() << std::endl;
+    mstack.pop();
+    std::cout << mstack.size() << std::endl;
+    mstack.push(3);
+    mstack.push(5);
+    mstack.push(737);
+    mstack.push(0);
+    MutantStack<int>::iterator it = mstack.begin();
+    MutantStack<int>::iterator ite = mstack.end();
+    ++it;
+    --it;
+    // 5 3 5 737 0
+    while (it != ite)
     {
-        std::cout << a[100] << std::endl;
+        std::cout << *it << std::endl;
+        ++it;
     }
-    catch (const std::exception& e)
-    {
-        std::cout << "Caught exception: " << e.what() << std::endl;
-    }
-    SEP
-
-    std::cout << "===== TEST 7: Array of strings =====\n";
-    Array<std::string> s(3);
-    s[0] = "hello";
-    s[1] = "world";
-    s[2] = "array";
-    for (unsigned int i = 0; i < s.size(); i++)
-        std::cout << "s[" << i << "] = " << s[i] << std::endl;
-    SEP
-
-    std::cout << "===== TEST 8: Const array access =====\n";
-    const Array<int> ca(a);
-    std::cout << "ca[2] = " << ca[2] << std::endl;
-    SEP
-
-    std::cout << "===== ALL TESTS DONE =====\n";
     return 0;
 }
