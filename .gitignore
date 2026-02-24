@@ -2,7 +2,9 @@
 obj
 *.exe
 prog
+btc
 *_intra
+intra*
 
 # Prerequisites
 *.d
