@@ -1,5 +1,5 @@
 CXX      := c++
-CXXFLAGS := -Iinclude -g #-Wall -Wextra -Werror 
+CXXFLAGS := -Iinclude -g -D_GLIBCXX_DEBUG #-Wall -Wextra -Werror 
 CXXFLAGS += -std=c++98
 
 SRC_DIR  := src
@@ -7,7 +7,7 @@ OBJ_DIR  := obj
 INC_DIR  := include
 
 # Files 
-SRCS     := $(SRC_DIR)/main.cpp
+SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/PmergeMe.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
 NAME     := prog
 
