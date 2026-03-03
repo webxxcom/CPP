@@ -26,8 +26,19 @@ int main()
     a.push_back(8);
     a.push_back(9);
 
+    // Sort using normal sort
+    std::vector<int> cpy(a);
+    std::sort(cpy.begin(), cpy.end());
     
-    PmergeMe::sort(a);
-    for(size_t i = 0; i < a.size(); ++i)
-        std::cout << a[i] << " ";
+    // Sort using merge insertion
+    PmergeMe().sort(a);
+
+    if (cpy != a)
+        std::cout << "The array was not sorted\n" << std::endl;
+    else
+    {
+        for(size_t i = 0; i < a.size(); ++i)
+            std::cout << a[i] << " ";
+        std::cout << "\nNumber of comparisons: " << PmergeMe::__comp_number() << std::endl;
+    }
 }

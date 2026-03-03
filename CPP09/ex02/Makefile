@@ -9,7 +9,7 @@ INC_DIR  := include
 # Files 
 SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/PmergeMe.cpp
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
-NAME     := prog
+NAME     := PmergeMe
 
 all: $(NAME)
 
