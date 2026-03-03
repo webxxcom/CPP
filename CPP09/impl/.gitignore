@@ -1,0 +1,17 @@
+*.txt
+*.o
+*.replace
+*.out
+.cache
+megaphone
+phonebook
+main
+convert
+sad
+btc
+RNP
+harl
+harlFilter
+.direnv
+*_shrubbery
+PmergeMe
