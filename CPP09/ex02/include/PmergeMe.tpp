@@ -4,10 +4,20 @@ static inline void print(std::vector<int> arr, char m)
 {
     std::cout << m << ": ";
     for(int i = 0; i < arr.size(); ++i)
+    {
         std::cout << arr[i] << ' ';
+    }
     std::cout << std::endl;
 }
-
+static inline void print(std::vector<std::vector<int>::iterator> arr, char m)
+{
+    std::cout << m << ": ";
+    for(int i = 0; i < arr.size(); ++i)
+    {
+        std::cout << (*arr[i]) << ' ';
+    }
+    std::cout << std::endl;
+}
 template <typename Container>
 inline void PmergeMe::sort(Container &cont)
 {
@@ -15,9 +25,29 @@ inline void PmergeMe::sort(Container &cont)
     return (__internal_sort(cont, 1));
 }
 
+template <typename Iter>
+inline void PmergeMe::__swap_pair(Iter ths, int pair_level)
+{
+    Iter start = ths + (-pair_level + 1);
+    Iter end = ths + 1;
+    while (start != end)
+    {
+        std::iter_swap(start, start + pair_level);
+        std::advance(start, 1); 
+    }
+}
+
+template <typename It>
+static bool __comp_iter(It it1, It it2)
+{
+    return *it1 < *it2;
+}
+
 template <typename Container>
 inline void PmergeMe::__internal_sort(Container &cont, int const pair_level)
 {
+    typedef typename Container::iterator Iterator;
+
     const int chunk_n = cont.size() / pair_level;
     if (chunk_n < 2)
         return ;
@@ -27,38 +57,43 @@ inline void PmergeMe::__internal_sort(Container &cont, int const pair_level)
     const int jump = pair_level * 2;
     for(int i = 0; i < last; i += jump)
     {
-        int &this_pair = cont[i + pair_level - 1];
-        int &next_pair = cont[i + pair_level * 2 - 1];
+        Iterator this_pair = cont.begin() + i + pair_level - 1;
+        Iterator next_pair = this_pair + pair_level;
 
-        if (__comp(next_pair, this_pair))
-            std::swap(this_pair, next_pair);
+        if (__comp(*next_pair, *this_pair))
+            __swap_pair(this_pair, pair_level);
     }
     __internal_sort(cont, pair_level * 2);
 
-    std::vector<int> mchain;
-    std::vector<int> pchain;
+    std::vector<Iterator> mchain;
+    std::vector<Iterator> pchain;
 
-    // Insert b1 and a1 in the main chain
-    mchain.push_back(cont[pair_level - 1]);
-    mchain.push_back(cont[pair_level * 2 - 1]);
+    mchain.push_back(cont.begin() + pair_level - 1);
+    mchain.push_back(mchain[0] + pair_level);
 
-    // insert b_n into pending chain and a_n into main chain
-    for(int i = 4; i <= chunk_n; i += 2)
+    int i;
+    for(i = 3; i + 1 < chunk_n; i += 2)
     {
-        mchain.push_back(cont[pair_level * i - 1]);
-        pchain.push_back(cont[pair_level * (i - 1) - 1]);
+        pchain.push_back(cont.begin() + pair_level * i - 1);
+        mchain.push_back(cont.begin() + pair_level * (i + 1) - 1);
     }
-    // If an odd element was left out insert it into pending
-    if (is_odd)
-        pchain.push_back(cont.back());
+    if (i <= chunk_n)
+        pchain.push_back(cont.begin() + pair_level * i - 1);
 
-    for (size_t i = 0; i < pchain.size(); ++i)
+    for (i = 0; i < pchain.size(); ++i)
     {
-        mchain.insert(
-            std::upper_bound(mchain.begin(), mchain.end(), pchain[i], __comp),
-            pchain[i]);
-    }
+        Iterator val = pchain[i];
+        typename std::vector<Iterator>::iterator bound = std::upper_bound(mchain.begin(), mchain.end(), val, __comp_iter<Iterator>);
 
-    std::copy(mchain.begin(), mchain.end(), cont.begin());
-    print(mchain, 'M');
+        mchain.insert(bound, *(pchain.begin() + i));
+    }
+    std::vector<int> cp(cont);
+    for (i = 0; i < mchain.size(); ++i)
+    {
+        Iterator begin = mchain[i] + (-pair_level + 1);
+        Iterator end = mchain[i] + 1;
+
+        std::copy(begin, end, cp.begin() + pair_level * i);
+    }
+    cont = cp;
 }

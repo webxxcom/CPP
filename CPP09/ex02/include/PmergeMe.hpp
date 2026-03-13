@@ -29,6 +29,9 @@ private:
 
     static bool __comp(int a, int b);
 
+    template <typename Iter>
+    static void __swap_pair(Iter ths, int pair_level);
+
     template<typename Container>
     static void __internal_sort(Container &cont, int const pair_level);
 };
