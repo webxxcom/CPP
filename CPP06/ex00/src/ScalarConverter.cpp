@@ -13,6 +13,7 @@ date: 1/17/2026
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <iomanip>
 
 /**
  * Properly convert:
@@ -121,17 +122,10 @@ void ScalarConverter::printInt(double val)
 
 void ScalarConverter::printFloat(double val)
 {
-    float f = static_cast<float>(val);
-    std::cout << "float: " << f;
-    if (std::abs(f - (int)f) < 0.00001f)
-        std::cout << ".0";
-    std::cout << "f\n";
+    std::cout << "float: " << std::fixed << std::setprecision(1) << static_cast<float>(val) << "f\n";
 }
 
 void ScalarConverter::printDouble(double val)
 {
-    std::cout << "double: " << val;
-    if (std::abs(val - (int)val) <0.00001)
-        std::cout << ".0";
-    std::cout << '\n';
+    std::cout << "double: " << std::fixed << std::setprecision(1) << val << '\n';
 }
