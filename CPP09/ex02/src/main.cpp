@@ -17,6 +17,8 @@
 #include <sys/time.h>
 #include <list>
 #include <deque>
+#include <cerrno>
+#include <limits>
 
 template<typename Cont>
 static inline void print(Cont arr)
@@ -38,13 +40,34 @@ double getTime()
     return tv.tv_sec + tv.tv_usec * 0.000001;
 }
 
-std::vector<int> parse_args(char **argv, int n)
+static bool validate_arg(std::string arg)
+{
+    if (arg[0] == '-')
+    {
+        std::cerr << "Negative numbers are not allowed" << std::endl;
+        return false;
+    }
+    long nbr = strtol(arg.c_str(), NULL, 10);
+    if (nbr == 0 && arg != "0")
+    {
+        std::cerr << "Non-number arguments not allowed" << std::endl;
+        return false;
+    }
+    if (nbr > std::numeric_limits<int>::max() || errno == ERANGE)
+    {
+        std::cerr << "Too big arguments are not allowed" << std::endl;
+        return false;
+    }
+    return true;
+}
+
+static std::vector<int> parse_args(char **argv, int n)
 {
     std::vector<int> res;
 
     for (int i = 0; i < n; ++i)
-        res.push_back(std::atoi(argv[i]));
-
+        if (validate_arg(argv[i]))
+            res.push_back(std::atoi(argv[i]));
     return res;
 }
 
@@ -99,13 +122,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    std::cout << "After:\t[";
-    print(sortedVec);
-    std::cout << "]\n";
-
     std::cout << "Time to process a range of " << a.size() << " elements with std::vector: " << (end - start) << '\n';
 
-    // list sorting
+    //list sorting
     std::deque<int> sortedDeque = makeDeque(a);
     start = getTime();
     PmergeMe::sort(sortedDeque);
