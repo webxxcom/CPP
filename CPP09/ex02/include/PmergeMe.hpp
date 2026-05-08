@@ -8,34 +8,34 @@ Date: 2/24/2026
 #pragma once
 
 #include <vector>
-#include <stdexcept>
 #include <utility>
 #include <iostream>
 #include <algorithm>
-
-template<typename Iter>
-static inline void swap_iters(Iter end, int pair_level)
-{
-    Iter begin = end - (pair_level - 1);
-    Iter next_begin = begin + pair_level;
-
-    while (begin != end + 1)
-    {
-        std::iter_swap(begin, next_begin);
-        std::advance(next_begin, 1);
-        std::advance(begin, 1);
-    }
-}
+#include <cmath>
 
 class PmergeMe {
-public:
-    static size_t n_compares;
-
-    PmergeMe();
-    ~PmergeMe();
+private:
+    static inline int _jacobsthal_number(int n)
+    {
+        return (int)round((pow(2, n + 1) + pow(-1, n)) / 3);
+    }
 
     template<typename Iter>
-    static inline bool compare(Iter it1, Iter it2)
+    static inline void __swap_pairs(Iter end, int pair_level)
+    {
+        Iter begin = end - (pair_level - 1);
+        Iter next_begin = begin + pair_level;
+
+        while (begin != end + 1)
+        {
+            std::iter_swap(begin, next_begin);
+            std::advance(next_begin, 1);
+            std::advance(begin, 1);
+        }
+    }
+
+    template<typename Iter>
+    static inline bool __iter_compare(Iter it1, Iter it2)
     {
         ++n_compares;
         return *it1 < *it2;
@@ -57,8 +57,8 @@ public:
             Iterator this_pair = cont.begin() + (i + pair_level - 1);
             Iterator next_pair = cont.begin() + (i + pair_level * 2 - 1);
 
-            if (compare(next_pair, this_pair))
-                swap_iters(this_pair, pair_level);
+            if (__iter_compare(next_pair, this_pair))
+                __swap_pairs(this_pair, pair_level);
         }
         __internal_sort(cont, pair_level * 2);
 
@@ -68,7 +68,7 @@ public:
         mchain.push_back(cont.begin() + (pair_level - 1));
         mchain.push_back(cont.begin() + (pair_level * 2 - 1));
 
-        for(int i = 4; i <= chunk_n; i += 2)
+        for(size_t i = 4; i <= chunk_n; i += 2)
         {
             mchain.push_back(cont.begin() + (pair_level * i - 1));
             pchain.push_back(cont.begin() + (pair_level * (i - 1) - 1));
@@ -76,14 +76,44 @@ public:
         if (is_odd)
             pchain.push_back(cont.begin() + (pair_level * chunk_n - 1));
 
-        for (size_t i = 0; i < pchain.size(); ++i)
+        int prev_jacobsthal = _jacobsthal_number(1);
+        int inserted_numbers = 0;
+        for (int k = 2;; k++)
         {
+            int curr_jacobsthal = _jacobsthal_number(k);
+            int jacobsthal_diff = curr_jacobsthal - prev_jacobsthal;
+            int offset = 0;
+            if (jacobsthal_diff > (int)pchain.size())
+                break;
+            int insert_n = jacobsthal_diff;
+            typename std::vector<Iterator>::iterator pchain_it = pchain.begin() + (jacobsthal_diff - 1);
+            typename std::vector<Iterator>::iterator bound_it = mchain.begin() + (curr_jacobsthal + inserted_numbers);
+            while (insert_n)
+            {
+                typename std::vector<Iterator>::iterator inserted = mchain.insert(
+                    std::upper_bound(mchain.begin(), bound_it, *pchain_it, __iter_compare<Iterator>),
+                    *pchain_it
+                );
+                --insert_n;
+                pchain_it = pchain.erase(pchain_it);
+                std::advance(pchain_it, -1);
+                offset += (inserted - mchain.begin()) == curr_jacobsthal + inserted_numbers;
+                bound_it = mchain.begin() + (curr_jacobsthal + inserted_numbers - offset);
+            }
+            prev_jacobsthal = curr_jacobsthal;
+            inserted_numbers += jacobsthal_diff;
+            offset = 0;
+        }
+
+        for (ssize_t i = pchain.size() - 1; i >= 0; --i)
+        {
+            typename std::vector<Iterator>::iterator curr_bound = mchain.begin() + (mchain.size() - pchain.size() + i + is_odd);
             mchain.insert(
-                std::upper_bound(mchain.begin(), mchain.end(), pchain[i], compare<Iterator>),
+                std::upper_bound(mchain.begin(), curr_bound, pchain[i], __iter_compare<Iterator>),
                 pchain[i]);
         }
 
-        std::vector<int> res;
+        Container res;
         for (size_t i = 0; i < mchain.size(); ++i)
         {
             Iterator beg = mchain[i] - (pair_level - 1);
@@ -92,6 +122,10 @@ public:
         }
         cont = res;
     }
+
+public:
+
+    static size_t n_compares;
 
     template<typename Container>
     static void sort(Container &cont)

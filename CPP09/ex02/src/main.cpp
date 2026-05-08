@@ -35,24 +35,40 @@ double getTime()
     return tv.tv_sec + tv.tv_usec * 0.000001;
 }
 
-int main()
+std::vector<int> parse_args(char **argv, int n)
 {
-    std::vector<int> a;
-    a.push_back(2);
-    a.push_back(14);
-    a.push_back(11);
-    a.push_back(7);
-    a.push_back(3);
-    a.push_back(13);
-    a.push_back(12);
-    a.push_back(9);
-    a.push_back(5);
-    a.push_back(8);
-    a.push_back(1);
-    a.push_back(4);
-    a.push_back(10);
-    a.push_back(6);
-    a.push_back(0);
+    std::vector<int> res;
+
+    for (int i = 0; i < n; ++i)
+        res.push_back(std::atoi(argv[i]));
+
+    return res;
+}
+
+int main(int argc, char **argv)
+{
+    if (argc == 1)
+    {
+        std::cerr << "Usage: " << argv[0] << " <list of numbers>" << std::endl;
+        return 1;
+    }
+    std::vector<int> a = parse_args(argv + 1, argc - 1);
+    // std::vector<int> a;
+    // a.push_back(2);
+    // a.push_back(14);
+    // a.push_back(11);
+    // a.push_back(7);
+    // a.push_back(3);
+    // a.push_back(13);
+    // a.push_back(12);
+    // a.push_back(9);
+    // a.push_back(5);
+    // a.push_back(8);
+    // a.push_back(1);
+    // a.push_back(4);
+    // a.push_back(10);
+    // a.push_back(6);
+    // a.push_back(0);
 
     std::cout << "Before:\t[";
     print(a);
