@@ -5,6 +5,7 @@ prog
 btc
 *_intra
 intra*
+diamondTrap
 
 # Prerequisites
 *.d
