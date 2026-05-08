@@ -15,10 +15,7 @@ Date: 2/24/2026
 
 class PmergeMe {
 private:
-    static inline int _jacobsthal_number(int n)
-    {
-        return (int)round((pow(2, n + 1) + pow(-1, n)) / 3);
-    }
+    static int _jacobsthal_number(size_t n);
 
     template<typename Iter>
     static inline void __swap_pairs(Iter end, int pair_level)
@@ -105,7 +102,7 @@ private:
             offset = 0;
         }
 
-        for (ssize_t i = pchain.size() - 1; i >= 0; --i)
+        for (ssize_t i = (ssize_t)pchain.size(); i-- > 0;)
         {
             typename std::vector<Iterator>::iterator curr_bound = mchain.begin() + (mchain.size() - pchain.size() + i + is_odd);
             mchain.insert(
@@ -120,7 +117,7 @@ private:
 
             res.insert(res.end(), beg, mchain[i] + 1);
         }
-        cont = res;
+        std::copy(res.begin(), res.end(), cont.begin());
     }
 
 public:
@@ -130,6 +127,6 @@ public:
     template<typename Container>
     static void sort(Container &cont)
     {
-        return (__internal_sort(cont));
+        return __internal_sort(cont);
     }
 };

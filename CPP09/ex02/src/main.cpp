@@ -15,10 +15,13 @@
 #include <vector>
 #include "PmergeMe.hpp"
 #include <sys/time.h>
+#include <list>
+#include <deque>
 
-static inline void print(std::vector<int> arr)
+template<typename Cont>
+static inline void print(Cont arr)
 {
-    for(int i = 0; i < arr.size(); ++i)
+    for(size_t i = 0; i < arr.size(); ++i)
     {
         std::cout << arr[i];
         if (i + 1 >= arr.size())
@@ -45,6 +48,28 @@ std::vector<int> parse_args(char **argv, int n)
     return res;
 }
 
+std::deque<int> makeDeque(std::vector<int> const& vec)
+{
+    std::deque<int> res;
+
+    res.insert(res.end(), vec.begin(), vec.end());
+    return res;
+}
+
+template<typename Cont>
+static bool is_sorted(Cont const& nums)
+{
+    for(size_t i = 0; i + 1 < nums.size(); ++i)
+    {
+        if (nums[i] > nums[i + 1])
+        {
+            std::cout << "ERROR: " << nums[i] << " " << nums[i + 1] << " pos: " << i << '\n';
+            break;
+        }
+    }
+    return std::adjacent_find(nums.begin(), nums.end(), std::greater<int>()) == nums.end();
+}
+
 int main(int argc, char **argv)
 {
     if (argc == 1)
@@ -53,37 +78,46 @@ int main(int argc, char **argv)
         return 1;
     }
     std::vector<int> a = parse_args(argv + 1, argc - 1);
-    // std::vector<int> a;
-    // a.push_back(2);
-    // a.push_back(14);
-    // a.push_back(11);
-    // a.push_back(7);
-    // a.push_back(3);
-    // a.push_back(13);
-    // a.push_back(12);
-    // a.push_back(9);
-    // a.push_back(5);
-    // a.push_back(8);
-    // a.push_back(1);
-    // a.push_back(4);
-    // a.push_back(10);
-    // a.push_back(6);
-    // a.push_back(0);
 
     std::cout << "Before:\t[";
     print(a);
     std::cout << "]\n";
 
-    PmergeMe::sort(a);
-
+    // vector sorting
+    std::vector<int> sortedVec = a;
+    
     double start = getTime();
-    std::cout << "After:\t[";
-    print(a);
-    std::cout << "]\n";
+    PmergeMe::sort(sortedVec);
     double end = getTime();
+    std::cout << "After:\t[";
+    print(sortedVec);
+    std::cout << "]\n";
+
+    if (!is_sorted(sortedVec))
+    {
+        std::cerr << "The sequence for std::vector was not sorted" << std::endl;
+        return 1;
+    }
+
+    std::cout << "After:\t[";
+    print(sortedVec);
+    std::cout << "]\n";
 
     std::cout << "Time to process a range of " << a.size() << " elements with std::vector: " << (end - start) << '\n';
-    std::cout << "Time to process a range of " << a.size() << " elements with std::queue: " << 0.1 << '\n';
+
+    // list sorting
+    std::deque<int> sortedDeque = makeDeque(a);
+    start = getTime();
+    PmergeMe::sort(sortedDeque);
+    end = getTime();
+
+    if (!is_sorted(sortedDeque))
+    {
+        std::cerr << "The sequence for std::deque was not sorted" << std::endl;
+        return 1;
+    }
+
+    std::cout << "Time to process a range of " << a.size() << " elements with std::deque: " << (end - start) << '\n';
     
     std::cout << "Number of comparisons: " << PmergeMe::n_compares << std::endl;
 }
