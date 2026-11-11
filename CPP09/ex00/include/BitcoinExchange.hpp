@@ -13,7 +13,9 @@ Date: 2/23/2026
 
 class BitcoinExchange {
 public:
-    BitcoinExchange(std::string const &db_filename);
+    explicit BitcoinExchange(std::string const &db_filename);
+    BitcoinExchange(BitcoinExchange const& other);
+    BitcoinExchange& operator=(BitcoinExchange const& other);
     ~BitcoinExchange();
 
     void calculate(std::string const& file) const;
@@ -22,6 +24,7 @@ private:
     time_t extract_time(std::string const &str) const;
     float extract_btc(std::string const &str) const;
 
-    const std::string db_filename;
+    std::string db_filename;
     std::map<time_t, float> db;
 };
+

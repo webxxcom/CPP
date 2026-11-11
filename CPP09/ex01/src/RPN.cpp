@@ -22,11 +22,11 @@ static void process_oper(std::stack<char> &s, char oper)
     int res;
 
     if (s.empty())
-        throw std::runtime_error("Error! Excessive operand");
+        throw std::runtime_error("Error: Excessive operand");
     n = s.top();
     s.pop();
     if (s.empty())
-        throw std::runtime_error("Error! Excessive operand");
+        throw std::runtime_error("Error: Excessive operand");
     res = s.top();
     s.pop(); 
     switch (oper)
@@ -61,7 +61,7 @@ long long RPN::calculate(std::string const &expr)
         else if (isoperand(expr[i]))
             process_oper(s, expr[i]);
         else if (!std::isspace(expr[i]))
-            throw std::runtime_error("Error! Unknown character occured");
+            throw std::runtime_error("Error: Unknown character occured");
     } 
     return (s.top());
 }

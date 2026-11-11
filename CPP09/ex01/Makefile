@@ -1,6 +1,5 @@
 CXX      := c++
-CXXFLAGS := -Iinclude -g #-Wall -Wextra -Werror 
-CXXFLAGS += -std=c++98
+CXXFLAGS := -Iinclude -std=c++98 -Wall -Wextra -Werror 
 
 SRC_DIR  := src
 OBJ_DIR  := obj
@@ -9,7 +8,7 @@ INC_DIR  := include
 # Files 
 SRCS     := $(SRC_DIR)/main.cpp $(SRC_DIR)/RPN.cpp 
 OBJS     := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
-NAME     := prog
+NAME     := RPN
 
 all: $(NAME)
 
