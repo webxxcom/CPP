@@ -1,27 +1,19 @@
-/* --- PmergeMe.h --- */
-
-/* ------------------------------------------
-Author: undefined
-Date: 2/24/2026
------------------------------------------- */
-
 #pragma once
 
-#include <vector>
-#include <utility>
 #include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <memory>
 
 class PmergeMe {
 private:
-    static int _jacobsthal_number(size_t n);
+    static int jacobsthal_number(size_t n);
 
-    template<typename Iter>
-    static inline void __swap_pairs(Iter end, int pair_level)
+    template<typename T>
+    static inline void swap_pairs(T end, int pair_level)
     {
-        Iter begin = end - (pair_level - 1);
-        Iter next_begin = begin + pair_level;
+        T begin = end - (pair_level - 1);
+        T next_begin = begin + pair_level;
 
         while (begin != end + 1)
         {
@@ -31,17 +23,19 @@ private:
         }
     }
 
-    template<typename Iter>
-    static inline bool __iter_compare(Iter it1, Iter it2)
+    template<typename T>
+    static inline bool iter_compare(T it1, T it2)
     {
         ++n_compares;
         return *it1 < *it2;
     }
 
-    template<typename Container>
-    static void __internal_sort(Container &cont, ssize_t const pair_level = 1)
+    template<template<typename, typename> class C, typename T, typename A>
+    static void internal_sort(C<T, A> &cont, ssize_t const pair_level = 1)
     {
+        typedef C<T, A> Container;
         typedef typename Container::iterator Iterator;
+        typedef C<Iterator, std::allocator<Iterator> > Chain;
 
         const ssize_t chunk_n = cont.size() / pair_level;
         if (chunk_n < 2)
@@ -54,13 +48,13 @@ private:
             Iterator this_pair = cont.begin() + (i + pair_level - 1);
             Iterator next_pair = cont.begin() + (i + pair_level * 2 - 1);
 
-            if (__iter_compare(next_pair, this_pair))
-                __swap_pairs(this_pair, pair_level);
+            if (iter_compare(next_pair, this_pair))
+                swap_pairs(this_pair, pair_level);
         }
-        __internal_sort(cont, pair_level * 2);
+        internal_sort(cont, pair_level * 2);
 
-        std::vector<Iterator> mchain;
-        std::vector<Iterator> pchain;
+        Chain mchain;
+        Chain pchain;
 
         mchain.push_back(cont.begin() + (pair_level - 1));
         mchain.push_back(cont.begin() + (pair_level * 2 - 1));
@@ -73,20 +67,20 @@ private:
         if (is_odd)
             pchain.push_back(cont.begin() + (pair_level * chunk_n - 1));
 
-        ssize_t prev_jacobsthal = _jacobsthal_number(1);
+        ssize_t prev_jacobsthal = jacobsthal_number(1);
         ssize_t inserted_numbers = 0;
         for (ssize_t k = 2;; k++)
         {
-            ssize_t curr_jacobsthal = _jacobsthal_number(k);
+            ssize_t curr_jacobsthal = jacobsthal_number(k);
             ssize_t jacobsthal_diff = curr_jacobsthal - prev_jacobsthal;
             ssize_t offset = 0;
             if (jacobsthal_diff > (int)pchain.size())
                 break;
-            typename std::vector<Iterator>::iterator bound_it = mchain.begin() + (curr_jacobsthal + inserted_numbers);
+            typename Chain::iterator bound_it = mchain.begin() + (curr_jacobsthal + inserted_numbers);
             for (ssize_t n = jacobsthal_diff - 1; n >= 0; --n)
             {
-                typename std::vector<Iterator>::iterator inserted = mchain.insert(
-                    std::upper_bound(mchain.begin(), bound_it, pchain[n], __iter_compare<Iterator>),
+                typename Chain::iterator inserted = mchain.insert(
+                    std::upper_bound(mchain.begin(), bound_it, pchain[n], iter_compare<Iterator>),
                     pchain[n]
                 );
 
@@ -100,9 +94,9 @@ private:
 
         for (ssize_t i = (ssize_t)pchain.size(); i-- > 0;)
         {
-            typename std::vector<Iterator>::iterator curr_bound = mchain.begin() + (mchain.size() - pchain.size() + i + is_odd);
+            typename Chain::iterator curr_bound = mchain.begin() + (mchain.size() - pchain.size() + i + is_odd);
             mchain.insert(
-                std::upper_bound(mchain.begin(), curr_bound, pchain[i], __iter_compare<Iterator>),
+                std::upper_bound(mchain.begin(), curr_bound, pchain[i], iter_compare<Iterator>),
                 pchain[i]);
         }
 
@@ -123,6 +117,6 @@ public:
     template<typename Container>
     static void sort(Container &cont)
     {
-        return __internal_sort(cont);
+        internal_sort(cont);
     }
 };

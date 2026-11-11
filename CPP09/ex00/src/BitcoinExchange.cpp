@@ -82,7 +82,7 @@ void BitcoinExchange::calculate(std::string const &file) const
             // Print the closest lower date
             std::map<time_t, float>::const_iterator it = db.upper_bound(date);
             if (it == db.begin())
-                throw std::runtime_error("Date is before the DB starts: " + date_str);
+                throw std::runtime_error("Error: Date is before the DB starts: " + date_str);
             
             --it;
             std::cout << date_str + " => " << btcn << " = " << it->second * btcn << std::endl;

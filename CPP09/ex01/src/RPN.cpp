@@ -1,14 +1,18 @@
 #include "RPN.hpp"
 #include <iostream>
 #include <stack>
+#include <list>
 #include <stdexcept>
+
+// stack uses std::deque by default which i use in ex02
+typedef std::stack<long long, std::list<long long> > Stack;
 
 static bool isoperand(char ch)
 {
     return (ch == '/' || ch == '*' || ch == '+' || ch == '-');
 }
 
-static void process_oper(std::stack<long long> &s, char oper)
+static void process_oper(Stack &s, char oper)
 {
     long long n;
     long long res;
@@ -47,7 +51,7 @@ RPN::~RPN() {}
 
 long long RPN::calculate(std::string const &expr)
 {
-    std::stack<long long> s;
+    Stack s;
 
     for (size_t i = 0; i < expr.size(); ++i)
     {

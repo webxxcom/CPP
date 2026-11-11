@@ -13,12 +13,13 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "PmergeMe.hpp"
 #include <sys/time.h>
-#include <list>
 #include <deque>
 #include <cerrno>
 #include <limits>
+#include <cstdlib>
+
+#include "PmergeMe.hpp"
 
 template<typename Cont>
 static inline void print(Cont arr)
@@ -32,43 +33,24 @@ static inline void print(Cont arr)
     }
 }
 
-double getTime()
+// Current time in microseconds
+long getTime()
 {
     timeval tv;
     gettimeofday(&tv, NULL);
 
-    return tv.tv_sec + tv.tv_usec * 0.000001;
+    return tv.tv_sec * 1000000L + tv.tv_usec;
 }
 
-static bool validate_arg(std::string arg)
+static bool validate_arg(std::string const &arg)
 {
-    if (arg[0] == '-')
-    {
-        std::cerr << "Negative numbers are not allowed" << std::endl;
+    // strtol would accept "12abc", "+5" and " 5"
+    if (arg.empty() || arg.find_first_not_of("0123456789") != std::string::npos)
         return false;
-    }
-    long nbr = strtol(arg.c_str(), NULL, 10);
-    if (nbr == 0 && arg != "0")
-    {
-        std::cerr << "Non-number arguments not allowed" << std::endl;
-        return false;
-    }
-    if (nbr > std::numeric_limits<int>::max() || errno == ERANGE)
-    {
-        std::cerr << "Too big arguments are not allowed" << std::endl;
-        return false;
-    }
-    return true;
-}
 
-static std::vector<int> parse_args(char **argv, int n)
-{
-    std::vector<int> res;
-
-    for (int i = 0; i < n; ++i)
-        if (validate_arg(argv[i]))
-            res.push_back(std::atoi(argv[i]));
-    return res;
+    errno = 0;
+    long nbr = std::strtol(arg.c_str(), NULL, 10);
+    return errno != ERANGE && nbr <= std::numeric_limits<int>::max();
 }
 
 std::deque<int> makeDeque(std::vector<int> const& vec)
@@ -82,14 +64,6 @@ std::deque<int> makeDeque(std::vector<int> const& vec)
 template<typename Cont>
 static bool is_sorted(Cont const& nums)
 {
-    for(size_t i = 0; i + 1 < nums.size(); ++i)
-    {
-        if (nums[i] > nums[i + 1])
-        {
-            std::cout << "ERROR: " << nums[i] << " " << nums[i + 1] << " pos: " << i << '\n';
-            break;
-        }
-    }
     return std::adjacent_find(nums.begin(), nums.end(), std::greater<int>()) == nums.end();
 }
 
@@ -100,33 +74,43 @@ int main(int argc, char **argv)
         std::cerr << "Usage: " << argv[0] << " <list of numbers>" << std::endl;
         return 1;
     }
-    std::vector<int> a = parse_args(argv + 1, argc - 1);
+    
+    std::vector<int> a;
+    for (int i = 1; i < argc; ++i)
+    {
+        if (validate_arg(argv[i]))
+            a.push_back(std::atoi(argv[i]));
+        else
+        {
+            std::cerr << "Error: Invalid number: " << argv[i] << std::endl;
+            return 1;
+        }
+    }
 
-    std::cout << "Before:\t[";
+    std::cout << "Before: ";
     print(a);
-    std::cout << "]\n";
+    std::cout << '\n';
 
     // vector sorting
+    long start = getTime();
     std::vector<int> sortedVec = a;
-    
-    double start = getTime();
     PmergeMe::sort(sortedVec);
-    double end = getTime();
-    std::cout << "After:\t[";
+    long end = getTime();
+    std::cout << "After: ";
     print(sortedVec);
-    std::cout << "]\n";
+    std::cout << '\n';
 
     if (!is_sorted(sortedVec))
     {
         std::cerr << "The sequence for std::vector was not sorted" << std::endl;
         return 1;
     }
+    std::cout << "Time to process a range of " << a.size() << " elements with std::vector: " << (end - start) << " us\n";
 
-    std::cout << "Time to process a range of " << a.size() << " elements with std::vector: " << (end - start) << '\n';
-
-    //list sorting
-    std::deque<int> sortedDeque = makeDeque(a);
+    // deque sorting
+    PmergeMe::n_compares = 0;
     start = getTime();
+    std::deque<int> sortedDeque = makeDeque(a);
     PmergeMe::sort(sortedDeque);
     end = getTime();
 
@@ -135,8 +119,7 @@ int main(int argc, char **argv)
         std::cerr << "The sequence for std::deque was not sorted" << std::endl;
         return 1;
     }
-
-    std::cout << "Time to process a range of " << a.size() << " elements with std::deque: " << (end - start) << '\n';
+    std::cout << "Time to process a range of " << a.size() << " elements with std::deque: " << (end - start) << " us\n";
     
     std::cout << "Number of comparisons: " << PmergeMe::n_compares << std::endl;
 }
