@@ -1,6 +1,5 @@
 CXX      := c++
-CXXFLAGS := -Iinclude -g #-Wall -Wextra -Werror 
-CXXFLAGS += -std=c++98
+CXXFLAGS := -Iinclude -std=c++98 -Wall -Wextra -Werror 
 
 SRC_DIR  := src
 OBJ_DIR  := obj

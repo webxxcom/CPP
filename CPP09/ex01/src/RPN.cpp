@@ -1,37 +1,30 @@
-/* --- RPN.cpp --- */
-
-/* ------------------------------------------
-author: undefined
-date: 2/24/2026
------------------------------------------- */
-
 #include "RPN.hpp"
-#include <queue>
 #include <iostream>
 #include <stack>
-
+#include <stdexcept>
 
 static bool isoperand(char ch)
 {
     return (ch == '/' || ch == '*' || ch == '+' || ch == '-');
 }
 
-static void process_oper(std::stack<char> &s, char oper)
+static void process_oper(std::stack<long long> &s, char oper)
 {
-    int n;
-    int res;
+    long long n;
+    long long res;
 
-    if (s.empty())
-        throw std::runtime_error("Error! Excessive operand");
+    if (s.size() < 2)
+        throw std::runtime_error("Error: Excessive operand");
     n = s.top();
     s.pop();
-    if (s.empty())
-        throw std::runtime_error("Error! Excessive operand");
     res = s.top();
-    s.pop(); 
+    s.pop();
+
     switch (oper)
     {
     case '/':
+        if (n == 0)
+            throw std::runtime_error("Error: Division by zero");
         res /= n;
         break;
     case '*':
@@ -48,20 +41,31 @@ static void process_oper(std::stack<char> &s, char oper)
 }
 
 RPN::RPN() { }
-RPN::~RPN() { }
+RPN::RPN(RPN const &other) { *this = other; }
+RPN &RPN::operator=(RPN const &other) { (void)other; return *this; }
+RPN::~RPN() {}
 
 long long RPN::calculate(std::string const &expr)
 {
-    std::stack<char> s;
+    std::stack<long long> s;
 
     for (size_t i = 0; i < expr.size(); ++i)
     {
         if (std::isdigit(expr[i]))
+        {
+            // Numbers must be less than 10
+            if (i + 1 < expr.size() && std::isdigit(expr[i + 1]))
+                throw std::runtime_error("Error: Number must be less than 10");
+
             s.push(expr[i] - '0');
+        }
         else if (isoperand(expr[i]))
             process_oper(s, expr[i]);
         else if (!std::isspace(expr[i]))
-            throw std::runtime_error("Error! Unknown character occured");
-    } 
+            throw std::runtime_error("Error: Unknown character occured");
+    }
+    if (s.size() != 1)
+        throw std::runtime_error("Error: Not finished result");
+
     return (s.top());
 }

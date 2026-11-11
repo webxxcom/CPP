@@ -11,6 +11,8 @@ Date: 2/24/2026
 class RPN {
 public:
     RPN();
+    RPN(RPN const& other);
+    RPN& operator=(RPN const& other);
     ~RPN();
 
     static long long calculate(std::string const &expr);

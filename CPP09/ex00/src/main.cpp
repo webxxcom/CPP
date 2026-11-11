@@ -13,14 +13,22 @@
 #include "BitcoinExchange.hpp"
 #include <iostream>
 
+static const std::string DB_NAME = "./resources/data.csv";
+
 int main(int argc, char **argv)
 {
     if (argc != 2)
     {
-        std::cerr << "Error! Program must take two arguments" << std::endl;
-        return (1);
+        std::cerr << "Error: could not open file." << std::endl;
+        return 1;
     }
-    BitcoinExchange be("./resources/data.csv");
 
-    be.calculate(argv[1]);
+    try {
+        BitcoinExchange be(DB_NAME);
+        be.calculate(argv[1]);
+    }
+    catch (std::exception const &ex) {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
 }
